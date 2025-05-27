@@ -27,7 +27,12 @@
                 </div>
                 <button id="rotate-btn">Rotacionar Navio</button>
                 <button id="finish-placement" disabled>Finalizar Posicionamento</button>
-            </div>
+            </div>        </div>
+
+        <!-- Mobile board switching controls -->
+        <div class="mobile-board-controls" id="mobile-controls" style="display: none;">
+            <button class="board-switch-btn active" id="show-player1">Ver Jogador 1</button>
+            <button class="board-switch-btn" id="show-player2">Ver Jogador 2</button>
         </div>
 
         <div class="game-boards">
@@ -42,11 +47,8 @@
                 <div class="board" id="player2-board"></div>
                 <div class="ships-status" id="player2-ships"></div>
             </div>
-        </div>
-
-        <div class="game-controls">
+        </div>        <div class="game-controls">
             <button id="new-game">Novo Jogo</button>
-            <button id="switch-player" style="display: none;">Trocar Jogador</button>
         </div>
 
         <div class="game-log" id="game-log"></div>

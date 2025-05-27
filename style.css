@@ -132,13 +132,16 @@ h1 {
 
 .board {
     display: grid;
-    grid-template-columns: repeat(10, 35px);
-    grid-template-rows: repeat(10, 35px);
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
     gap: 1px;
     background: #333;
     padding: 5px;
     border-radius: 5px;
     margin: 0 auto;
+    width: 350px;
+    height: 350px;
+    aspect-ratio: 1;
 }
 
 .cell {
@@ -150,6 +153,9 @@ h1 {
     align-items: center;
     justify-content: center;
     font-weight: bold;
+    font-size: 12px;
+    min-height: 30px;
+    aspect-ratio: 1;
 }
 
 .cell:hover {
@@ -290,26 +296,146 @@ h1 {
 }
 
 @media (max-width: 768px) {
-    .game-boards {
-        flex-direction: column;
-        align-items: center;
-        gap: 30px;
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        max-width: 100%;
     }
     
     .game-info {
         flex-direction: column;
+        gap: 15px;
     }
     
-    .board {
-        grid-template-columns: repeat(10, 30px);
-        grid-template-rows: repeat(10, 30px);
+    .ship-selector {
+        padding: 15px;
     }
     
-    .cell {
+    .ships {
+        justify-content: center;
+    }
+    
+    .ship-btn {
         font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .game-boards {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+    }
+      .player-board {
+        width: 100%;
+        max-width: 350px;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        margin: 0 auto;
+    }
+    
+    .player-board.hidden-mobile {
+        display: none;
+    }
+    
+    .player-board h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+      .board {
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        gap: 1px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 320px;
+        height: 320px;
+        aspect-ratio: 1;
+    }
+      .cell {
+        font-size: 10px;
+        min-height: 28px;
+        width: 100%;
+        aspect-ratio: 1;
+    }
+      .cell::after {
+        font-size: 10px;
+    }
+    
+    .ships-status {
+        font-size: 12px;
+        padding: 8px;
     }
     
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    
+    .current-player h2 {
+        font-size: 1.3rem;
+    }
+    
+    .game-phase {
+        font-size: 14px;
+        padding: 8px;
+    }
+    
+    .game-controls {
+        margin-bottom: 15px;
+    }
+    
+    .game-log {
+        padding: 15px;
+        font-size: 14px;
+        max-height: 150px;
+    }
+    
+    .transition-content {
+        padding: 30px 20px;
+        max-width: 90%;
+    }
+    
+    .transition-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .transition-content p {
+        font-size: 1rem;
+    }
+    
+    /* Mobile board switching buttons */
+    .mobile-board-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .board-switch-btn {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid transparent;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+    
+    .board-switch-btn.active {
+        border-color: #00ff88;
+        background: rgba(0,255,136,0.3);
+    }
+    
+    .board-switch-btn:hover {
+        background: rgba(255,255,255,0.3);
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-board-controls {
+        display: none;
     }
 }

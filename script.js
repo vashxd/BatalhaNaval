@@ -1,9 +1,10 @@
-class BattleshipGame {
-    constructor() {
+class BattleshipGame {    constructor() {
         this.currentPlayer = 1;
         this.gamePhase = 'placement'; // placement, battle, ended
         this.selectedShipSize = 5;
         this.shipDirection = 'horizontal'; // horizontal, vertical
+        this.isMobile = window.innerWidth <= 768;
+        this.currentMobileView = 1; // Which player board is currently visible on mobile
         this.boards = {
             1: this.createEmptyBoard(),
             2: this.createEmptyBoard()
@@ -79,6 +80,20 @@ class BattleshipGame {
         });        // New game
         document.getElementById('new-game').addEventListener('click', () => {
             this.newGame();
+        });
+
+        // Mobile board switching
+        document.getElementById('show-player1').addEventListener('click', () => {
+            this.switchMobileView(1);
+        });
+
+        document.getElementById('show-player2').addEventListener('click', () => {
+            this.switchMobileView(2);
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            this.handleResize();
         });
 
         // Board clicks
@@ -343,6 +358,7 @@ class BattleshipGame {
         this.gamePhase = 'placement';
         this.selectedShipSize = 5;
         this.shipDirection = 'horizontal';
+        this.currentMobileView = 1; // Reset mobile view
         this.boards = {
             1: this.createEmptyBoard(),
             2: this.createEmptyBoard()
@@ -368,9 +384,7 @@ class BattleshipGame {
         
         this.createBoards();
         this.updateUI();
-    }
-
-    updateUI() {
+    }    updateUI() {
         // Update current player text
         if (this.gamePhase === 'placement') {
             document.getElementById('current-player-text').textContent = `Jogador ${this.currentPlayer} - Posicione seus navios`;
@@ -379,6 +393,10 @@ class BattleshipGame {
             document.getElementById('current-player-text').textContent = `Vez do Jogador ${this.currentPlayer}`;
             document.getElementById('game-phase').textContent = 'Fase: Batalha';
         }
+
+        // Update mobile controls and view
+        this.updateMobileControls();
+        this.updateMobileView();
 
         // Update boards
         this.updateBoard(1);
@@ -389,7 +407,7 @@ class BattleshipGame {
 
         // Update game log
         this.updateGameLog();
-    }    updateBoard(player) {
+    }updateBoard(player) {
         const board = document.getElementById(`player${player}-board`);
         const cells = board.querySelectorAll('.cell');
         
@@ -549,13 +567,78 @@ class BattleshipGame {
     updateGameLog() {
         const logElement = document.getElementById('game-log');
         logElement.innerHTML = '<h3>Log do Jogo:</h3>';
-        
-        this.gameLog.slice(-5).forEach(entry => {
+          this.gameLog.slice(-5).forEach(entry => {
             const div = document.createElement('div');
             div.className = 'log-entry';
             div.textContent = entry;
             logElement.appendChild(div);
         });
+    }
+
+    handleResize() {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth <= 768;
+        
+        if (wasMobile !== this.isMobile) {
+            this.updateMobileControls();
+            this.updateMobileView();
+        }
+    }
+
+    updateMobileControls() {
+        const mobileControls = document.getElementById('mobile-controls');
+        
+        if (this.isMobile && this.gamePhase !== 'placement') {
+            mobileControls.style.display = 'flex';
+        } else {
+            mobileControls.style.display = 'none';
+        }
+    }
+
+    switchMobileView(player) {
+        if (!this.isMobile) return;
+        
+        this.currentMobileView = player;
+        
+        // Update button states
+        document.querySelectorAll('.board-switch-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.getElementById(`show-player${player}`).classList.add('active');
+        
+        this.updateMobileView();
+    }
+
+    updateMobileView() {
+        if (!this.isMobile) {
+            // Show both boards on desktop
+            document.querySelector('.player-board:nth-child(1)').classList.remove('hidden-mobile');
+            document.querySelector('.player-board:nth-child(2)').classList.remove('hidden-mobile');
+            return;
+        }
+
+        const player1Board = document.querySelector('.player-board:nth-child(1)');
+        const player2Board = document.querySelector('.player-board:nth-child(2)');
+
+        if (this.gamePhase === 'placement') {
+            // During placement, show only current player's board
+            if (this.currentPlayer === 1) {
+                player1Board.classList.remove('hidden-mobile');
+                player2Board.classList.add('hidden-mobile');
+            } else {
+                player1Board.classList.add('hidden-mobile');
+                player2Board.classList.remove('hidden-mobile');
+            }
+        } else {
+            // During battle, show based on mobile view selection
+            if (this.currentMobileView === 1) {
+                player1Board.classList.remove('hidden-mobile');
+                player2Board.classList.add('hidden-mobile');
+            } else {
+                player1Board.classList.add('hidden-mobile');
+                player2Board.classList.remove('hidden-mobile');
+            }
+        }
     }
 }
 
